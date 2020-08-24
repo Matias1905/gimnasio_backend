@@ -1,7 +1,7 @@
 {
   "name": "gimnasio_backend",
   "version": "1.0.0",
-  "description": "\"Backend project\"",
+  "description": "Backend project",
   "main": "app.js",
   "scripts": {
     "start": "nodemon ./bin/www",
