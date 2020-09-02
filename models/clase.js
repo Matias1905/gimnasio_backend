@@ -21,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         as: 'profesor',
         onDelete: 'CASCADE'
       })
+
+      Clase.belongsToMany(models.Socio, {through: 'SocioClase'})
     }
   };
   Clase.init({
