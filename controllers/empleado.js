@@ -37,7 +37,7 @@ module.exports = {
     update(req, res){
         return Empleado.findByPk(req.params.id).then(empleado => {
             if(!empleado){
-                res.status(404).send({message: 'Empleado no encontrado!'})
+                return res.status(404).send({message: 'Empleado no encontrado!'})
             }
             return empleado.update({
                 nombre: req.body.nombre,
@@ -54,7 +54,18 @@ module.exports = {
                 direccion: req.body.direccion
             }).then(obj => res.status(200).send(obj))
             .catch(err => res.status(400).send(err))
-        })
+        }).catch(err => res.status(400).send(err))
+    },
+
+
+    //Revisar en caso de querer hacer borrado lógico nada más
+    delete(req, res){
+        return Empleado.destroy({
+            where: {
+                id: req.params.id
+            }
+        }).then(() => res.sendStatus(204))
+        .catch(err => res.status(400).send(err))
     }
 
 
