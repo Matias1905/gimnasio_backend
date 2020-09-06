@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Instalacion.hasOne(models.Servicio, {
         foreignKey: 'instalacion_id',
+        as: 'instalacion',
         onDelete: 'CASCADE'
       })
     }

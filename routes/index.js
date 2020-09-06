@@ -1,5 +1,6 @@
 const { empleado, socio, instalacion, servicio, abono } = require('../controllers');
 const producto = require('../controllers/producto');
+const usuario = require('../controllers/usuario');
 
 module.exports = (app) => {
     app.get('/api', (req, res) => res.status(200).send({
@@ -19,6 +20,7 @@ module.exports = (app) => {
     app.post('/socios', socio.create)
     app.put('/socios/:id', socio.update)
     app.delete('/socios/:id', socio.delete)
+    app.post('/socios/:id/datosmedicos', socio.agregarDatosMedicos)
 
     //ABM instalaciones
     app.get('/instalaciones', instalacion.list)
@@ -47,5 +49,18 @@ module.exports = (app) => {
     app.post('/productos', producto.create)
     app.put('/productos/:id', producto.update)
     app.delete('/productos/:id', producto.delete)
+
+
+    //signUp y login
+    app.post('/usuarios', usuario.create)
+    app.post('/login', usuario.verificarUsuario)
+    app.patch('/usuarios/:id', usuario.update)
+
+
+
+
+    //otros métodos
+
+    app.post('/buscarSocio', socio.getByDni) //reworkear nombre
 
 };

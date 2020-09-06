@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Servicio.belongsTo(models.Instalacion, {
         foreignKey: 'instalacion_id',
+        as: 'instalacion',
         onDelete: 'CASCADE'
       })
 

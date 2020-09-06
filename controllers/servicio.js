@@ -1,15 +1,25 @@
-const { Servicio } = require('../models')
+const { Servicio, Instalacion } = require('../models')
 
 module.exports = {
 
     list(_, res){
-        return Servicio.findAll()
+        return Servicio.findAll({
+            include: [{
+                model:Instalacion,
+                as: 'instalacion'
+            }]
+        })
         .then(list => res.status(200).send(list))
         .catch(err => res.status(400).send(err))
     },
 
     getOne(req, res){
-        return Servicio.findByPk(req.params.id)
+        return Servicio.findByPk(req.params.id, {
+            include: [{
+                model:Instalacion,
+                as: 'instalacion'
+            }]
+        })
         .then(obj => res.status(200).send(obj))
         .catch(err => res.status(404).send(err))
     },

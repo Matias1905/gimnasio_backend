@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       DatosMedicos.belongsTo(models.Socio, {
         foreignKey: 'socio_id',
+        as: 'datos_medicos',
         onDelete: 'CASCADE'
       })
     }
