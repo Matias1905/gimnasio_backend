@@ -4,6 +4,19 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Empleado extends Model {
+    //provisorio
+    calcularSueldo(mes) {
+      const fijo = this.sueldo_base
+      if (this.cargo === 'profesor') {
+        return this.countClases().then(cant => {
+          return fijo + cant * this.sueldo_clase;
+        }).catch(err => -1)
+      } else {
+        return fijo;
+      }
+    }
+
+
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -23,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Empleado.hasMany(models.Clase, {
         foreignKey: 'profesor_id',
-        as: 'profesor'
+        as: 'clases'
       })
     }
   };

@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE'
       })
 
-      Clase.belongsToMany(models.Socio, {through: 'SocioClase'})
+      Clase.belongsToMany(models.Socio, {through: 'SocioClase', as: 'inscriptos'})
     }
   };
   Clase.init({

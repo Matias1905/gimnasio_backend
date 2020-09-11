@@ -66,8 +66,27 @@ module.exports = {
             }
         }).then(() => res.sendStatus(204))
         .catch(err => res.status(400).send(err))
+    },
+
+
+    liquidarSueldo(req, res) {
+        return Empleado.findByPk(req.params.id).then(empleado => {
+            if (!empleado) {
+                return res.sendStatus(404)
+            }
+            empleado.calcularSueldo().then(monto => res.status(200).send({ monto: monto }))
+                .catch(err => res.status(400).send(err))
+        }).catch(err => res.status(400).send(err))
+    },
+
+
+    getProfesores(req, res) {
+        return Empleado.findAll({
+            where: {
+                cargo: 'profesor'
+            }
+        }).then(list => res.status(200).send(list))
+            .catch(err => res.status(400).send(err))
     }
-
-
 
 }

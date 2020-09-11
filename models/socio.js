@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'socio_id'
       })
 
-      Socio.belongsToMany(models.Clase, { through: 'SocioClase' })
+      Socio.belongsToMany(models.Clase, { through: 'SocioClase', as: 'inscripciones' })
     }
   };
   Socio.init({
