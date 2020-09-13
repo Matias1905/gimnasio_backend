@@ -2,6 +2,11 @@ const { Usuario } = require('../models')
 
 module.exports = {
 
+    list(_, res) {
+        return Usuario.findAll().then(list => res.status(200).send(list))
+            .catch(err => res.status.send(err))
+    },
+
     create(req, res){
         return Usuario.create({
             usuario: req.body.usuario,

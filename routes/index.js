@@ -1,4 +1,4 @@
-const { empleado, socio, instalacion, servicio, abono, producto, usuario, clase } = require('../controllers');
+const { empleado, socio, instalacion, servicio, abono, producto, usuario, clase, factura } = require('../controllers');
 
 module.exports = (app) => {
     app.get('/api', (req, res) => res.status(200).send({
@@ -56,9 +56,14 @@ module.exports = (app) => {
     app.delete('/clases/:id', clase.delete)
     app.put('/clases/:id/inscribir', clase.inscribirSocio)
 
-    
+    //ABM facturas
+    app.get('/facturas', factura.list)
+
+
+
 
     //signUp y login
+    app.get('/usuarios', usuario.list)
     app.post('/usuarios', usuario.create)
     app.post('/login', usuario.verificarUsuario)
     app.patch('/usuarios/:id', usuario.update)
@@ -72,5 +77,7 @@ module.exports = (app) => {
     app.get('/profesores', empleado.getProfesores)
 
     app.get('/montoSueldo/:id', empleado.liquidarSueldo) //falta que se calcule segun las clases del mes
+
+    app.post('/facturarAbono', factura.gestionarCompraAbono)
 
 };
