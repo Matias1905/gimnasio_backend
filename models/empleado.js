@@ -1,14 +1,22 @@
 'use strict';
 const {
-  Model
+  Model, Op
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Empleado extends Model {
     //provisorio
     calcularSueldo(mes) {
       const fijo = this.sueldo_base
       if (this.cargo === 'profesor') {
-        return this.countClases().then(cant => {
+        return this.countClases({
+          where: {
+            fecha_inicio: {
+              [Op.between]: mes
+            },
+            cancelada: false
+          }
+        }).then(cant => {
           return fijo + cant * this.sueldo_clase;
         }).catch(err => -1)
       } else {

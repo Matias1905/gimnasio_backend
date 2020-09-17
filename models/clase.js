@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Clase.belongsTo(models.Servicio, {
         foreignKey: 'servicio_id',
+        as: 'servicio',
         onDelete: 'CASCADE'
       })
 

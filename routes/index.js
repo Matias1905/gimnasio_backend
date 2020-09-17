@@ -76,8 +76,13 @@ module.exports = (app) => {
     app.post('/buscarSocio', socio.getByDni) //reworkear nombre
     app.get('/profesores', empleado.getProfesores)
 
-    app.get('/montoSueldo/:id', empleado.liquidarSueldo) //falta que se calcule segun las clases del mes
+    app.get('/empleados/:id/liquidarSueldo', empleado.liquidarSueldo) //falta que se calcule segun las clases del mes
+    app.get('/sueldos', empleado.liquidarTodo)
 
     app.post('/facturarAbono', factura.gestionarCompraAbono)
+
+    app.get('/getClasesSemana', clase.getClasesSemana)
+
+    app.get('/servicios/:id/clases', clase.getClasesServicio)
 
 };

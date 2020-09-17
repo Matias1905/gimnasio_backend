@@ -1,5 +1,5 @@
 const { Empleado } = require('../models')
-const empleado = require('../models/empleado')
+const moment = require('moment')
 
 module.exports = {
 
@@ -74,11 +74,27 @@ module.exports = {
             if (!empleado) {
                 return res.sendStatus(404)
             }
-            empleado.calcularSueldo().then(monto => res.status(200).send({ monto: monto }))
+            const mes = calcularMes()
+            empleado.calcularSueldo(mes).then(monto => res.status(200).send({ monto: monto, mes: mes }))
                 .catch(err => res.status(400).send(err))
         }).catch(err => res.status(400).send(err))
     },
 
+    liquidarTodo(_, res) {
+        return Empleado.findAll().then(empleados => {
+            const mes = calcularMes()
+
+            return Promise.all(empleados.map(async (empleado) => {
+                const sueldo = await empleado.calcularSueldo(mes)
+                return ({
+                    empleado,
+                    sueldo,
+                    mes
+                })
+            })).then(sueldos => res.status(200).send(sueldos))
+                .catch(err => res.status(400).send(err))
+        }).catch(err => res.status(400).send(err))
+    },
 
     getProfesores(req, res) {
         return Empleado.findAll({
@@ -90,3 +106,12 @@ module.exports = {
     }
 
 }
+
+const calcularMes = () => {
+    const fechaS = moment().startOf('month')
+    const fechaE = moment().endOf('month')
+
+    return [fechaS, fechaE]
+}
+
+

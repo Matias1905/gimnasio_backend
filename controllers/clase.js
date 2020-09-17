@@ -1,4 +1,7 @@
-const { Clase, Socio } = require('../models')
+const { Op } = require('sequelize')
+const { Clase, Socio, Empleado, Servicio, Instalacion } = require('../models')
+const moment = require('moment')
+
 
 module.exports = {
 
@@ -67,6 +70,85 @@ module.exports = {
             .then(obj => res.status(200).send(obj))
             .catch(err => res.status(400).send(err))
         }).catch(err => res.status(400).send(err))
+    },
+
+    getClasesSemana(_, res) {
+        const semana = calcularSemana()
+        return Clase.findAll({
+            where: {
+                fecha_inicio: {
+                    [Op.between]: semana
+                }
+            },
+            order: [
+                ['fecha_inicio', 'asc']
+            ],
+            include: [
+                {
+                    model: Socio,
+                    as: 'inscriptos',
+                    through: {
+                        attributes: []
+                    }
+                }, {
+                    model: Empleado,
+                    as: 'profesor',
+                    attributes: ['id', 'nombre', 'apellido']
+                }, {
+                    model: Servicio,
+                    as: 'servicio',
+                    attributes: ['id', 'label'],
+                    include: [{
+                        model: Instalacion,
+                        as: 'instalacion',
+                        attributes: ['id', 'label', 'capacidad']
+                    }]
+                }
+            ]
+        }).then(list => res.status(200).send(list))
+            .catch(err => res.status(400).send(err))
+    },
+
+    getClasesServicio(req, res) {
+        const semana = calcularSemana()
+        return Clase.findAll({
+            where: {
+                servicio_id: req.params.id,
+                fecha_inicio: {
+                    [Op.between]: semana
+                }
+            },
+            include: [
+                {
+                    model: Socio,
+                    as: 'inscriptos',
+                    through: {
+                        attributes: []
+                    }
+                }, {
+                    model: Empleado,
+                    as: 'profesor',
+                    attributes: ['id', 'nombre', 'apellido']
+                }, {
+                    model: Servicio,
+                    as: 'servicio',
+                    attributes: ['id', 'label'],
+                    include: [{
+                        model: Instalacion,
+                        as: 'instalacion',
+                        attributes: ['id', 'label', 'capacidad']
+                    }]
+                }
+            ]
+        }).then(list => res.status(200).send(list))
+            .catch(err => res.status(400).send(err))
     }
 
+}
+
+const calcularSemana = () => {
+    const fechaS = moment().hours(0).minutes(0)
+    const fechaE = moment(fechaS).add(7, 'days')
+
+    return [fechaS, fechaE]
 }

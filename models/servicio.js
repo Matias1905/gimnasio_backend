@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Servicio.hasMany(models.Clase, {
         foreignKey: 'servicio_id',
+        as: 'clases'
       })
     }
   };

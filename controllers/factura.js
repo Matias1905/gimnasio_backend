@@ -28,6 +28,9 @@ module.exports = {
                 {
                     model: Abono
                 }
+            ],
+            order: [
+                ['id', 'desc']
             ]
         }).then(list => res.status(200).send(list))
             .catch(err => res.status(400).send(err))
