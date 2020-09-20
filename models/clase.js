@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Clase',
   });
 
-  Clase.beforeCreate((async (clase, options) => {
+  const verificarClaseValida = async (clase, options) => {
     const start = new Date(clase.fecha_inicio)
     const end = new Date(clase.fecha_fin)
     const { servicio_id, profesor_id } = clase;
@@ -58,6 +58,8 @@ module.exports = (sequelize, DataTypes) => {
             { servicio_id: servicio_id },
             { profesor_id: profesor_id }
           ]
+          }, {
+            cancelada: false
         }]
       }
     })
@@ -68,7 +70,10 @@ module.exports = (sequelize, DataTypes) => {
       return Promise.resolve()
     }
 
-  }))
+  }
+
+  Clase.beforeCreate(verificarClaseValida)
+  Clase.beforeUpdate(verificarClaseValida)
 
   return Clase;
 };
