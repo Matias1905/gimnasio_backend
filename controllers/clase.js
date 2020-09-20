@@ -1,3 +1,4 @@
+const { sequelize } = require('../models/index')
 const { Op } = require('sequelize')
 const { Clase, Socio, Empleado, Servicio, Instalacion } = require('../models')
 const moment = require('moment')
@@ -25,9 +26,10 @@ module.exports = {
     },
 
     create(req, res) {
+        const fecha_fin = moment(req.body.fecha_inicio).add(req.body.duracion, 'minutes');
         return Clase.create({
             fecha_inicio: req.body.fecha_inicio,
-            fecha_fin: req.body.fecha_fin,
+            fecha_fin: fecha_fin,
             servicio_id: req.body.servicio_id,
             profesor_id: req.body.profesor_id,
             cancelada: false
@@ -142,13 +144,54 @@ module.exports = {
             ]
         }).then(list => res.status(200).send(list))
             .catch(err => res.status(400).send(err))
-    }
+    },
+
+    repetirClasesSemana(req, res) {
+
+        const horarios = calcularClasesSemanales(new Date(req.body.fecha_inicio), new Date(req.body.repetir_hasta))
+
+        const clases = horarios.map(fecha_inicio => {
+            const fecha_fin = moment(fecha_inicio).add(req.body.duracion, 'minutes');
+
+            return {
+                fecha_inicio: fecha_inicio,
+                fecha_fin: fecha_fin,
+                servicio_id: req.body.servicio_id,
+                profesor_id: req.body.profesor_id,
+                cancelada: false
+            }
+        })
+
+        return sequelize.transaction((t) => {
+            return Clase.bulkCreate(clases, { transaction: t, returning: true, individualHooks: true });
+        }).then(obj => res.status(201).send(obj))
+            .catch(err => res.status(400).send({
+                msg: 'las clases no pudieron crearse',
+                error: err
+            }))
+
+
+    },
+
 
 }
 
 const calcularSemana = () => {
-    const fechaS = moment().hours(0).minutes(0)
+    const fechaS = moment().startOf('day')
     const fechaE = moment(fechaS).add(7, 'days')
 
     return [fechaS, fechaE]
+}
+
+const calcularClasesSemanales = (fecha_inicio, fecha_fin) => {
+    const horarios = [];
+
+    let date = moment(fecha_inicio)
+
+    while (moment(fecha_fin).endOf('day').isAfter(date)) {
+        horarios.push(date)
+        date = moment(date).add(7, 'days')
+    }
+
+    return horarios
 }

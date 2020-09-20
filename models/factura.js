@@ -23,7 +23,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Factura.init({
-    fecha: DataTypes.DATE
+    fecha: DataTypes.DATE,
+    medio_pago: DataTypes.STRING,
+    total: DataTypes.FLOAT
   }, {
     sequelize,
     modelName: 'Factura',

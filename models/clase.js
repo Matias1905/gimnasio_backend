@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { Op } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Clase extends Model {
     /**
@@ -34,5 +35,40 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Clase',
   });
+
+  Clase.beforeCreate((async (clase, options) => {
+    const start = new Date(clase.fecha_inicio)
+    const end = new Date(clase.fecha_fin)
+    const { servicio_id, profesor_id } = clase;
+
+    const isInvalid = await Clase.findOne({
+      where: {
+        [Op.and]: [{
+          [Op.or]: [{
+            fecha_inicio: {
+              [Op.between]: [start, end]
+            }
+          }, {
+            fecha_fin: {
+              [Op.between]: [start, end]
+            }
+          }]
+        }, {
+          [Op.or]: [
+            { servicio_id: servicio_id },
+            { profesor_id: profesor_id }
+          ]
+        }]
+      }
+    })
+
+    if (isInvalid) {
+      return Promise.reject('La clase no pudo ser creada')
+    } else {
+      return Promise.resolve()
+    }
+
+  }))
+
   return Clase;
 };

@@ -3,7 +3,11 @@ const { Abono } = require('../models')
 module.exports = {
 
     list(_, res) {
-        return Abono.findAll()
+        return Abono.findAll({
+            order: [
+                ['dias_abono', 'asc']
+            ]
+        })
             .then(list => res.status(200).send(list))
             .catch(err => res.status(400).send(err))
     },

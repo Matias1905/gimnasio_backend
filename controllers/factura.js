@@ -5,11 +5,15 @@ module.exports = {
 
     
     gestionarCompraAbono(req, res) {
+        //OPCION: si la llamada no contiene el total, buscar total en el abono correspondiente.
+
         //facturar abono correspondiente
         return Factura.create({
             fecha: new Date(),
             socio_id: req.body.socio_id,
-            abono_id: req.body.abono_id
+            abono_id: req.body.abono_id,
+            medio_pago: req.body.medio_pago,
+            total: req.body.total
         }).then(factura => {
             //actualizar datos en el socio
             return actualizarSocio(req.body.socio_id, req.body.abono_id)

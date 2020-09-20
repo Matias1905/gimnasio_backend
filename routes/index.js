@@ -85,4 +85,9 @@ module.exports = (app) => {
 
     app.get('/servicios/:id/clases', clase.getClasesServicio)
 
+
+
+    //endpoint de prueba
+    app.post('/multiplesclases', clase.repetirClasesSemana)
+
 };
