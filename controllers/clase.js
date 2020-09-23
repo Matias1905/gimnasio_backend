@@ -68,9 +68,19 @@ module.exports = {
             if(!clase){
                 return res.sendStatus(404)
             }
-            return clase.addSocio(req.body.socio_id)
-            .then(obj => res.status(200).send(obj))
-            .catch(err => res.status(400).send(err))
+            return Socio.findByPk(req.body.socio_id).then(socio => {
+                if (socio.tipo_abono === 'libre' || socio.tipo_abono === 'clases') {
+                    if (moment(socio.abonado_hasta).isAfter(moment(clase.fecha_fin))) {
+                        return clase.addInscriptos(socio)
+                            .then(obj => res.status(200).send(obj))
+                            .catch(err => res.status(400).send(err))
+                    } else {
+                        return res.status(400).send({ message: 'El abono del socio está vencido o vencerá antes de la clase' })
+                    }
+                } else {
+                    return res.status(400).send({ message: 'La opción no corresponde con el tipo de abono del socio' })
+                } 
+            }).catch(err => res.status(400).send(err))
         }).catch(err => res.status(400).send(err))
     },
 
@@ -111,6 +121,43 @@ module.exports = {
             .catch(err => res.status(400).send(err))
     },
 
+    getClasesHoy(req, res) {
+        const day = getDiaHoy();
+        return Clase.findAll({
+            where: {
+                fecha_inicio: {
+                    [Op.between]: day
+                }
+            },
+            include: [
+                {
+                    model: Socio,
+                    as: 'inscriptos',
+                    through: {
+                        attributes: []
+                    }
+                }, {
+                    model: Empleado,
+                    as: 'profesor',
+                    attributes: ['id', 'nombre', 'apellido']
+                }, {
+                    model: Servicio,
+                    as: 'servicio',
+                    attributes: ['id', 'label'],
+                    include: [{
+                        model: Instalacion,
+                        as: 'instalacion',
+                        attributes: ['id', 'label', 'capacidad']
+                    }]
+                }
+            ],
+            order: [
+                ['fecha_inicio', 'asc']
+            ],
+        }).then(list => res.status(200).send(list))
+            .catch(err => res.status(400).send(err))
+    },
+
     getClasesServicio(req, res) {
         const semana = calcularSemana()
         return Clase.findAll({
@@ -141,10 +188,14 @@ module.exports = {
                         attributes: ['id', 'label', 'capacidad']
                     }]
                 }
-            ]
+            ],
+            order: [
+                ['fecha_inicio', 'asc']
+            ],
         }).then(list => res.status(200).send(list))
             .catch(err => res.status(400).send(err))
     },
+
 
     repetirClasesSemana(req, res) {
 
@@ -173,6 +224,55 @@ module.exports = {
 
     },
 
+    getClasesSocioHoy(req, res) {
+        return Socio.findByPk(req.params.id).then(socio => {
+            const day = getDiaHoy();
+            return socio.getInscripciones({
+                where: {
+                    fecha_inicio: {
+                        [Op.between]: day
+                    }
+                },
+                include: [
+                    {
+                        model: Socio,
+                        as: 'inscriptos',
+                        through: {
+                            attributes: []
+                        }
+                    }, {
+                        model: Empleado,
+                        as: 'profesor',
+                        attributes: ['id', 'nombre', 'apellido']
+                    }, {
+                        model: Servicio,
+                        as: 'servicio',
+                        attributes: ['id', 'label'],
+                        include: [{
+                            model: Instalacion,
+                            as: 'instalacion',
+                            attributes: ['id', 'label', 'capacidad']
+                        }]
+                    }
+                ],
+                order: [
+                    ['fecha_inicio', 'asc']
+                ],
+            }).then(clases => res.status(200).send(clases))
+                .catch(err => res.status(400).send(err))
+        }).catch(err => res.status(400).send(err))
+    },
+
+    desinscribirSocio(req, res) {
+        return Clase.findByPk(req.params.id).then(clase => {
+            if (!clase) {
+                return res.sendStatus(404)
+            }
+            return clase.removeInscriptos(req.body.socio_id)
+                .then(obj => res.sendStatus(200))
+                .catch(err => res.status(400).send(err))
+        }).catch(err => res.status(400).send(err))
+    }
 
 }
 
@@ -194,4 +294,11 @@ const calcularClasesSemanales = (fecha_inicio, fecha_fin) => {
     }
 
     return horarios
+}
+
+const getDiaHoy = () => {
+    const fechaS = moment();
+    const fechaE = moment().endOf('day');
+
+    return [fechaS, fechaE]
 }

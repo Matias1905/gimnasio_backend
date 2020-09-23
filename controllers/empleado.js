@@ -15,6 +15,16 @@ module.exports = {
             .catch(err => res.status(404).send(err))
     },
 
+    getByDni(req, res) {
+        return Empleado.findOne({
+            where: {
+                dni: req.body.dni
+            }
+        })
+            .then(obj => res.status(200).send(obj))
+            .catch(err => res.status(404).send(err))
+    },
+
     create(req, res) {
         return Empleado.create({
             nombre: req.body.nombre,

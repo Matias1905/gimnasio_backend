@@ -1,4 +1,4 @@
-const { empleado, socio, instalacion, servicio, abono, producto, usuario, clase, factura } = require('../controllers');
+const { empleado, socio, instalacion, servicio, abono, producto, usuario, clase, factura, fichado } = require('../controllers');
 
 module.exports = (app) => {
     app.get('/api', (req, res) => res.status(200).send({
@@ -55,10 +55,14 @@ module.exports = (app) => {
     app.put('/clases/:id', clase.update)
     app.delete('/clases/:id', clase.delete)
     app.put('/clases/:id/inscribir', clase.inscribirSocio)
+    app.delete('/clases/:id/inscribir', clase.desinscribirSocio)
 
     //ABM facturas
     app.get('/facturas', factura.list)
 
+
+    app.get('/getClasesHoy', clase.getClasesHoy)
+    app.get('/socios/:id/claseshoy', clase.getClasesSocioHoy)
 
 
 
@@ -69,11 +73,19 @@ module.exports = (app) => {
     app.patch('/usuarios/:id', usuario.update)
 
 
+    //fichado
+    app.get('/fichadosSocios', fichado.getFichadosSocios)
+    app.get('/fichadosEmpleados', fichado.getFichadosEmpleados)
+    app.post('/ficharSocio/:id', fichado.ficharSocio)
+    app.post('/ficharEmpleado/:id', fichado.ficharEmpleado)
 
 
     //otros métodos
 
     app.post('/buscarSocio', socio.getByDni) //reworkear nombre
+    app.post('/buscarEmpleado', empleado.getByDni)
+
+
     app.get('/profesores', empleado.getProfesores)
 
     app.get('/empleados/:id/liquidarSueldo', empleado.liquidarSueldo) //falta que se calcule segun las clases del mes
