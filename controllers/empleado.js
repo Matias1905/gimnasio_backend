@@ -18,7 +18,8 @@ module.exports = {
     getByDni(req, res) {
         return Empleado.findOne({
             where: {
-                dni: req.body.dni
+                dni: req.body.dni,
+                activo: true
             }
         })
             .then(obj => res.status(200).send(obj))
@@ -61,7 +62,8 @@ module.exports = {
                 sueldo_clase: req.body.sueldo_clase,
                 telefono: req.body.telefono,
                 email: req.body.email,
-                direccion: req.body.direccion
+                direccion: req.body.direccion,
+                activo: req.body.activo
             }).then(obj => res.status(200).send(obj))
             .catch(err => res.status(400).send(err))
         }).catch(err => res.status(400).send(err))
@@ -91,7 +93,7 @@ module.exports = {
     },
 
     liquidarTodo(_, res) {
-        return Empleado.findAll().then(empleados => {
+        return Empleado.findAll({ where: { activo: true } }).then(empleados => {
             const mes = calcularMes()
 
             return Promise.all(empleados.map(async (empleado) => {
@@ -109,7 +111,8 @@ module.exports = {
     getProfesores(req, res) {
         return Empleado.findAll({
             where: {
-                cargo: 'profesor'
+                cargo: 'profesor',
+                activo: true
             }
         }).then(list => res.status(200).send(list))
             .catch(err => res.status(400).send(err))

@@ -40,7 +40,11 @@ module.exports = (sequelize, DataTypes) => {
     telefono: DataTypes.STRING,
     abonado_hasta: DataTypes.DATE,
     tipo_abono: DataTypes.STRING,
-    fecha_asociado: DataTypes.DATE
+    fecha_asociado: DataTypes.DATE,
+    activo: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
   }, {
     sequelize,
     modelName: 'Socio',

@@ -120,21 +120,21 @@ module.exports = {
       label: 'Anual',
       tipo: 'libre',
       dias_abono: 365,
-      precio: 10000,
+        precio: 12000,
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       label: 'Anual',
       tipo: 'clases',
       dias_abono: 365,
-      precio: 8000,
+        precio: 9000,
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       label: 'Anual',
       tipo: 'musculacion',
       dias_abono: 365,
-      precio: 6900,
+        precio: 7200,
       createdAt: new Date(),
       updatedAt: new Date()
     }], {})

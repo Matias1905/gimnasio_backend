@@ -54,6 +54,7 @@ module.exports = {
                 genero: req.body.genero,
                 direccion: req.body.direccion,
                 telefono: req.body.telefono,
+                activo: req.body.activo
             }).then(obj => res.status(200).send(obj))
                 .catch(err => res.status(400).send(err))
         }).catch(err => res.status(400).send(err))
@@ -85,7 +86,8 @@ module.exports = {
     getByDni(req, res) {
         return Socio.findOne({
             where: {
-                dni: req.body.dni
+                dni: req.body.dni,
+                activo: true
             }
         }).then(obj => {
             if (!obj) {

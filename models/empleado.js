@@ -63,7 +63,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     telefono: DataTypes.STRING,
     email: DataTypes.STRING,
-    direccion: DataTypes.STRING
+    direccion: DataTypes.STRING,
+    activo: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
   }, {
     sequelize,
     modelName: 'Empleado',
