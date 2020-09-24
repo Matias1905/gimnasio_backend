@@ -73,7 +73,6 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Clase.beforeCreate(verificarClaseValida)
-  Clase.beforeUpdate(verificarClaseValida)
 
   return Clase;
 };

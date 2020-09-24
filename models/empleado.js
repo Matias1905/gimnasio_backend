@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
           return fijo + cant * this.sueldo_clase;
         }).catch(err => -1)
       } else {
-        return fijo;
+        return Promise.resolve(fijo)
       }
     }
 

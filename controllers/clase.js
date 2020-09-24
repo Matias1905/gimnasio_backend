@@ -42,10 +42,10 @@ module.exports = {
             if (!clase) {
                 return res.status(404).send({ message: 'Clase no encontrada!' })
             }
-
+            const fecha_fin = moment(req.body.fecha_inicio).add(req.body.duracion, 'minutes');
             return clase.update({
                 fecha_inicio: req.body.fecha_inicio,
-                fecha_fin: req.body.fecha_fin,
+                fecha_fin: fecha_fin,
                 servicio_id: req.body.servicio_id,
                 profesor_id: req.body.profesor_id,
                 cancelada: req.body.cancelada

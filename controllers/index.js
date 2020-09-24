@@ -8,7 +8,8 @@ const factura = require('./factura')
 const clase = require('./clase')
 const producto = require('./producto')
 const fichado = require('./fichado')
+const recibos = require('./recibos')
 
 module.exports = {
-    empleado, socio, instalacion, servicio, abono, usuario, factura, clase, producto, fichado
+    empleado, socio, instalacion, servicio, abono, usuario, factura, clase, producto, fichado, recibos
 }

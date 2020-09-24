@@ -1,4 +1,4 @@
-const { empleado, socio, instalacion, servicio, abono, producto, usuario, clase, factura, fichado } = require('../controllers');
+const { empleado, socio, instalacion, servicio, abono, producto, usuario, clase, factura, fichado, recibos } = require('../controllers');
 
 module.exports = (app) => {
     app.get('/api', (req, res) => res.status(200).send({
@@ -90,6 +90,13 @@ module.exports = (app) => {
 
     app.get('/empleados/:id/liquidarSueldo', empleado.liquidarSueldo) //falta que se calcule segun las clases del mes
     app.get('/sueldos', empleado.liquidarTodo)
+
+    app.get('/recibos', recibos.list)
+    app.post('/recibos/:id', recibos.generarReciboSueldo)
+    app.post('/recibos', recibos.generarRecibosMultiples)
+
+
+
 
     app.post('/facturarAbono', factura.gestionarCompraAbono)
 
