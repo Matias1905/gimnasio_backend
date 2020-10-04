@@ -30,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
   Clase.init({
     fecha_inicio: DataTypes.DATE,
     fecha_fin: DataTypes.DATE,
-    cancelada: DataTypes.BOOLEAN
+    cancelada: DataTypes.BOOLEAN,
+    clave: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Clase',

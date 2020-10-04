@@ -27,12 +27,14 @@ module.exports = {
 
     create(req, res) {
         const fecha_fin = moment(req.body.fecha_inicio).add(req.body.duracion, 'minutes');
+        const clave = Math.floor(Math.random() * 1000000)
         return Clase.create({
             fecha_inicio: req.body.fecha_inicio,
             fecha_fin: fecha_fin,
             servicio_id: req.body.servicio_id,
             profesor_id: req.body.profesor_id,
-            cancelada: false
+            cancelada: false,
+            clave: clave
         }).then(obj => res.status(201).send(obj))
             .catch(err => res.status(400).send(err))
     },
@@ -200,6 +202,7 @@ module.exports = {
     repetirClasesSemana(req, res) {
 
         const horarios = calcularClasesSemanales(new Date(req.body.fecha_inicio), new Date(req.body.repetir_hasta))
+        const clave = Math.floor(Math.random() * 1000000)
 
         const clases = horarios.map(fecha_inicio => {
             const fecha_fin = moment(fecha_inicio).add(req.body.duracion, 'minutes');
@@ -209,7 +212,8 @@ module.exports = {
                 fecha_fin: fecha_fin,
                 servicio_id: req.body.servicio_id,
                 profesor_id: req.body.profesor_id,
-                cancelada: false
+                cancelada: false,
+                clave: clave
             }
         })
 
@@ -272,6 +276,36 @@ module.exports = {
                 .then(obj => res.sendStatus(200))
                 .catch(err => res.status(400).send(err))
         }).catch(err => res.status(400).send(err))
+    },
+
+    inscripcionMultiple(req, res) {
+        const today = moment()
+        return Socio.findByPk(req.body.socio_id).then(socio => {
+            if (socio.tipo_abono === 'libre' || socio.tipo_abono === 'clases') {
+                if (moment(socio.abonado_hasta).isAfter(today)) {
+                    return Clase.findAll({
+                        where: {
+                            clave: req.body.clave,
+                            cancelada: false,
+                            fecha_inicio: {
+                                [Op.gt]: today
+                            }
+                    }
+                }).then(clases => {
+                    if (!clases || clases.length === 0) {
+                        return res.status(400).send({ message: 'No hay clases!' })
+                    }
+
+                    inscribirAClases(socio, clases).then(() => res.sendStatus(200))
+                        .catch(err => res.status(400).send(err))
+                }).catch(err => res.status(400).send(err))
+                } else {
+                    return res.status(400).send({ message: 'El abono del socio se encuentra vencido' })
+                }
+            } else {
+                return res.status(400).send({ message: 'La opción no corresponde con el tipo de abono del socio' })
+            }
+        }).catch(err => res.status(400).send(err))
     }
 
 }
@@ -301,4 +335,13 @@ const getDiaHoy = () => {
     const fechaE = moment().endOf('day');
 
     return [fechaS, fechaE]
+}
+
+const inscribirAClases = async (socio, clases) => {
+    for (let clase of clases) {
+        if (moment(socio.abonado_hasta).isAfter(moment(clase.fecha_fin))) {
+            await clase.addInscriptos(socio)
+        }
+    }
+    return Promise.resolve()
 }

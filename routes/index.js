@@ -70,7 +70,7 @@ module.exports = (app) => {
     app.get('/usuarios', usuario.list)
     app.post('/usuarios', usuario.create)
     app.post('/login', usuario.verificarUsuario)
-    app.patch('/usuarios/:id', usuario.update)
+    app.patch('/usuarios', usuario.update)
 
 
     //fichado
@@ -108,5 +108,6 @@ module.exports = (app) => {
 
     //endpoint de prueba
     app.post('/multiplesclases', clase.repetirClasesSemana)
+    app.put('/inscripcionmultiple', clase.inscripcionMultiple)
 
 };

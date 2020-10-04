@@ -7,7 +7,11 @@ module.exports = {
             include: [{
                 model: DatosMedicos,
                 as: 'datos_medicos'
-            }]
+            }],
+            order: [
+                ['id', 'asc'],
+                [{ model: DatosMedicos, as: 'datos_medicos' }, 'createdAt', 'desc']
+            ]
         })
             .then(list => res.status(200).send(list))
             .catch(err => res.status(400).send(err))
@@ -17,8 +21,13 @@ module.exports = {
         return Socio.findByPk(req.params.id, {
             include: [{
                 model: DatosMedicos,
-                as: 'datos_medicos'
-            }]
+                as: 'datos_medicos',
+
+            }],
+            order: [
+                ['id', 'asc'],
+                [{ model: DatosMedicos, as: 'datos_medicos' }, 'createdAt', 'desc']
+            ]
         })
             .then(obj => res.status(200).send(obj))
             .catch(err => res.status(404).send(err))

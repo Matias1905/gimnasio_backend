@@ -22,7 +22,12 @@ module.exports = {
                 activo: true
             }
         })
-            .then(obj => res.status(200).send(obj))
+            .then(obj => {
+                if (!obj) {
+                    return res.sendStatus(404)
+                }
+                return res.status(200).send(obj)
+            })
             .catch(err => res.status(404).send(err))
     },
 

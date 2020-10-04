@@ -35,7 +35,7 @@ module.exports = {
 }
 
 async function update(req, res){
-    const usuario = await Usuario.findByPk(req.params.id);
+    const usuario = await Usuario.findOne({ where: { usuario: req.body.usuario } });
 
     if(!usuario){
         return res.sendStatus(404)
