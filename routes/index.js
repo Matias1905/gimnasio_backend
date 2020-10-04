@@ -4,14 +4,15 @@ module.exports = (app) => {
     app.get('/api', (req, res) => res.status(200).send({
         message: 'Welcome to the Fitness Center API!'
     }));
-
+    
     //ABM empleados
     app.get('/empleados', empleado.list)
     app.get('/empleados/:id', empleado.getOne)
     app.post('/empleados', empleado.create)
     app.put('/empleados/:id', empleado.update)
     app.delete('/empleados/:id', empleado.delete)
-
+    app.get('/profesores', empleado.getProfesores)
+    
     //ABM socios
     app.get('/socios', socio.list)
     app.get('/socios/:id', socio.getOne)
@@ -54,12 +55,15 @@ module.exports = (app) => {
     app.post('/clases', clase.create)
     app.put('/clases/:id', clase.update)
     app.delete('/clases/:id', clase.delete)
+    app.post('/multiplesclases', clase.repetirClasesSemana)
+    //TODO: chequear apto físico previo a inscribir
     app.put('/clases/:id/inscribir', clase.inscribirSocio)
     app.delete('/clases/:id/inscribir', clase.desinscribirSocio)
+    app.put('/inscripcionmultiple', clase.inscripcionMultiple)
 
     //ABM facturas
     app.get('/facturas', factura.list)
-
+    
 
     app.get('/getClasesHoy', clase.getClasesHoy)
     app.get('/socios/:id/claseshoy', clase.getClasesSocioHoy)
@@ -82,20 +86,18 @@ module.exports = (app) => {
 
     //otros métodos
 
-    app.post('/buscarSocio', socio.getByDni) //reworkear nombre
+    app.post('/buscarSocio', socio.getByDni) 
     app.post('/buscarEmpleado', empleado.getByDni)
 
 
-    app.get('/profesores', empleado.getProfesores)
 
-    app.get('/empleados/:id/liquidarSueldo', empleado.liquidarSueldo) //falta que se calcule segun las clases del mes
+
+    //TODO: refinar
+    app.get('/empleados/:id/liquidarSueldo', empleado.liquidarSueldo) 
     app.get('/sueldos', empleado.liquidarTodo)
-
     app.get('/recibos', recibos.list)
     app.post('/recibos/:id', recibos.generarReciboSueldo)
     app.post('/recibos', recibos.generarRecibosMultiples)
-
-
 
 
     app.post('/facturarAbono', factura.gestionarCompraAbono)
@@ -106,8 +108,5 @@ module.exports = (app) => {
 
 
 
-    //endpoint de prueba
-    app.post('/multiplesclases', clase.repetirClasesSemana)
-    app.put('/inscripcionmultiple', clase.inscripcionMultiple)
 
 };
