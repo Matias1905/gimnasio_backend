@@ -42,6 +42,7 @@ module.exports = {
             cargo: req.body.cargo,
             sueldo_base: req.body.sueldo_base,
             sueldo_clase: req.body.sueldo_clase,
+            cbu: req.body.cbu,
             telefono: req.body.telefono,
             email: req.body.email,
             direccion: req.body.direccion
@@ -65,6 +66,7 @@ module.exports = {
                 cargo: req.body.cargo,
                 sueldo_base: req.body.sueldo_base,
                 sueldo_clase: req.body.sueldo_clase,
+                cbu: req.body.cbu,
                 telefono: req.body.telefono,
                 email: req.body.email,
                 direccion: req.body.direccion,

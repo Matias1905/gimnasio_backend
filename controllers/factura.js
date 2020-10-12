@@ -7,12 +7,14 @@ module.exports = {
     gestionarCompraAbono(req, res) {
         //OPCION: si la llamada no contiene el total, buscar total en el abono correspondiente.
 
+        //TODO: if medio_pago = tarjeta: pegarle a la api antes de crear factura
         //facturar abono correspondiente
         return Factura.create({
             fecha: new Date(),
             socio_id: req.body.socio_id,
             abono_id: req.body.abono_id,
             medio_pago: req.body.medio_pago,
+            nro_transaccion: req.body.nro_transaccion,
             total: req.body.total
         }).then(factura => {
             //actualizar datos en el socio

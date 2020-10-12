@@ -19,6 +19,7 @@ module.exports = {
     generarRecibosMultiples(req, res) {
         const fecha = new Date()
         const array = req.body.empleados.map(a => ({ empleado_id: a.empleado_id, monto: a.monto, fecha }))
+        //TODO: integración con banco
         return ReciboSueldo.bulkCreate(array, { returning: true }).then(obj => res.status(201).send(obj))
             .catch(err => res.status(400).send(err))
     }

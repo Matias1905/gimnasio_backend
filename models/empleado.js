@@ -61,6 +61,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       defaultValue: 0
     },
+    cbu: DataTypes.STRING,
     telefono: DataTypes.STRING,
     email: DataTypes.STRING,
     direccion: DataTypes.STRING,
