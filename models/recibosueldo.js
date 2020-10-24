@@ -20,7 +20,25 @@ module.exports = (sequelize, DataTypes) => {
   };
   ReciboSueldo.init({
     fecha: DataTypes.DATE,
-    monto: DataTypes.FLOAT
+    monto: DataTypes.FLOAT,
+    mes: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return new Date(this.fecha).getMonth() + 1;
+      },
+      set(value) {
+        throw new Error('No se puede setear el periodo!')
+      }
+    },
+    year: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return new Date(this.fecha).getFullYear();
+      },
+      set(value) {
+        throw new Error('No se puede setear el periodo!')
+      }
+    }
   }, {
     sequelize,
     modelName: 'ReciboSueldo',
