@@ -1,4 +1,4 @@
-const { ReciboSueldo } = require('../models')
+const { ReciboSueldo, Empleado } = require('../models')
 
 module.exports = {
 
