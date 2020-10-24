@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       ReciboSueldo.belongsTo(models.Empleado, {
         foreignKey: 'empleado_id',
-        as: 'recibos',
+        as: 'empleado',
         onDelete: 'CASCADE'
       })
     }

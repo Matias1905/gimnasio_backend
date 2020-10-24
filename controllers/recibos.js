@@ -3,7 +3,18 @@ const { ReciboSueldo } = require('../models')
 module.exports = {
 
     list(_, res) {
-        return ReciboSueldo.findAll().then(arr => res.status(200).send(arr))
+        return ReciboSueldo.findAll({
+            include: [
+                {
+                    model: Empleado,
+                    as: 'empleado',
+                    attributes: ['id', 'nombre', 'apellido']
+                }
+            ],
+            order: [
+                ['id', 'desc']
+            ]
+        }).then(arr => res.status(200).send(arr))
             .catch(err => res.status(400).send(err))
     },
 
