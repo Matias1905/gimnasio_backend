@@ -100,7 +100,10 @@ module.exports = {
     },
 
     liquidarTodo(_, res) {
-        return Empleado.findAll({ where: { activo: true } }).then(empleados => {
+        return Empleado.findAll({
+            where: { activo: true },
+            attributes: ['id', 'nombre', 'apellido', 'cbu', 'activo']
+        }).then(empleados => {
             const mes = calcularMes()
 
             return Promise.all(empleados.map(async (empleado) => {

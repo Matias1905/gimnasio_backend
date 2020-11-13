@@ -20,6 +20,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors())
 
+let models = require('./models');
+
+models.sequelize.sync().then(function () {
+    console.log('Nice! Database looks fine!')
+}).catch(function (err) {
+    console.log(err, 'Something went wrong with the Database update!')
+})
 
 require('./routes')(app);
 // Setup a default catch-all route that sends back a welcome message in JSON format.

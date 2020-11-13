@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const { Op } = require('sequelize')
+const moment = require('moment')
 module.exports = (sequelize, DataTypes) => {
   class ReciboSueldo extends Model {
     /**
@@ -44,5 +46,28 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'ReciboSueldo',
     tableName: 'RecibosSueldo'
   });
+
+  // ReciboSueldo.beforeCreate(async (recibo, options) => {
+
+  //   const { fecha, empleado_id } = recibo;
+  //   const start = moment(fecha).startOf('month')
+  //   const end = moment(fecha).endOf('month')
+
+  //   const isInvalid = await ReciboSueldo.findOne({
+  //     where: {
+  //       fecha: {
+  //         [Op.between]: [start, end]
+  //       },
+  //       empleado_id: empleado_id
+  //     }
+  //   })
+
+  //   if (isInvalid) {
+  //     return Promise.reject('El sueldo del empleado para este mes ya ha sido liquidado')
+  //   } else {
+  //     return Promise.resolve()
+  //   }
+  // })
+
   return ReciboSueldo;
 };
