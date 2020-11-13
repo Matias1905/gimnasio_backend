@@ -101,8 +101,7 @@ module.exports = {
 
     liquidarTodo(_, res) {
         return Empleado.findAll({
-            where: { activo: true },
-            attributes: ['id', 'nombre', 'apellido', 'cbu', 'activo']
+            where: { activo: true }
         }).then(empleados => {
             const mes = calcularMes()
 

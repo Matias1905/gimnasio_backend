@@ -17,8 +17,9 @@ module.exports = (sequelize, DataTypes) => {
             cancelada: false
           }
         }).then(cant => {
-          return fijo + cant * this.sueldo_clase;
-        }).catch(err => -1)
+          const sueldo = fijo + cant * this.sueldo_clase
+          return sueldo;
+        }).catch(err => { throw new Error('No se pudo calcular el sueldo!') })
       } else {
         return Promise.resolve(fijo)
       }
