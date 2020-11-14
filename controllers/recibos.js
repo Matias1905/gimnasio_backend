@@ -57,7 +57,7 @@ module.exports = {
         // si hay empleados invalidos mandar error y arrays de validos-invalidos
         return verificarEmpleados(array, fecha).then(([arrValidos, arrRechazados]) => {
             if (arrRechazados.length !== 0) {
-                return res.status(409).send({ validos: arrValidos, rechazados: arrRechazados })
+                return res.status(412).send({ validos: arrValidos, rechazados: arrRechazados })
             }
 
             //Conexion con API del banco para la liquidación de sueldos
@@ -144,6 +144,7 @@ const verificarEmpleados = async (array, fecha) => {
             })
 
             if (!existeEmp) {
+                empleado.error = "Empleado inactivo"
                 arrRechazados.push(empleado);
             } else {
                 const isInvalid = await ReciboSueldo.findOne({
@@ -155,12 +156,14 @@ const verificarEmpleados = async (array, fecha) => {
                     }
                 })
                 if (isInvalid) {
+                    empleado.error = "Período ya liquidado"
                     arrRechazados.push(empleado)
                 } else {
                     arrValidos.push(empleado)
                 }
             }
         } catch {
+            empleado.error = "Error de servidor"
             arrRechazados.push(empleado)
         }
     }
